@@ -14,7 +14,7 @@ class ChatSpace
 
     void LeaveUser(std::shared_ptr<ChatUser> _User);
 
-    void DeliverMessage(const Message & _Message);
+    void DeliverMessage(const MessagePtr _MessagePtr);
 
   private: // --- Member variables ---
     std::set<std::shared_ptr<ChatUser>> m_Users;

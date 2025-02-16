@@ -2,6 +2,8 @@
 #include <boost/asio.hpp>
 #include "Client.hpp"
 
+constexpr size_t MESSAGE_SIZE = 100;
+
 int main(int _Argc, char* _Argv[])
 {
   try
@@ -24,12 +26,10 @@ int main(int _Argc, char* _Argv[])
         IOContext.run();
       });
 
-    char Line[Message::MAX_BODY_SIZE + 1];
-    while (std::cin.getline(Line, Message::MAX_BODY_SIZE + 1))
+    char Line[MESSAGE_SIZE + 1];
+    while (std::cin.getline(Line, MESSAGE_SIZE))
     {
-      Message CurrentMessage;
-      std::memcpy(CurrentMessage.GetBody(), Line, Message::MAX_BODY_SIZE);
-      ClientMessenger.Write(CurrentMessage);
+      ClientMessenger.WriteText(Line);
     }
 
     ClientMessenger.Close();

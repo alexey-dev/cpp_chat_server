@@ -8,7 +8,10 @@ else()
   message(FATAL_ERROR "Boost not found!")
 endif()
 
-add_library(LCLIENT Client.cpp ../common/Message.cpp)
+add_library(LCLIENT Client.cpp 
+../common/MessageBlock.cpp
+../common/MessageBuilder.cpp
+../common/Message.cpp)
 
 target_link_libraries(client LCLIENT ${Boost_LIBRARIES})
 

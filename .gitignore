@@ -1,1 +1,13 @@
 build/*
+.vscode/*
+CMakeFiles/*
+CMakeScripts/*
+Messenger.xcodeproj/*
+cmake_install.cmake
+CMakeCache.txt
+src/server/CMakeFiles/*
+src/server/Debug/*
+src/server/cmake_install.cmake
+src/client/CMakeFiles/*
+src/client/Debug/*
+src/client/cmake_install.cmake

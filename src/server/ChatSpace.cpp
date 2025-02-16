@@ -16,10 +16,10 @@ void ChatSpace::LeaveUser(std::shared_ptr<ChatUser> _User)
   m_Users.erase(_User);
 }
 
-void ChatSpace::DeliverMessage(const Message & _Message)
+void ChatSpace::DeliverMessage(const MessagePtr _MessagePtr)
 {
-  std::cout << "Message:" << _Message.GetBody() << std::endl;
+  std::cout << "Message:" << _MessagePtr->GetBody() << std::endl;
 
   for (const std::shared_ptr<ChatUser> & User : m_Users)
-    User->DeliverMessage(_Message);
+    User->DeliverMessage(_MessagePtr);
 }
