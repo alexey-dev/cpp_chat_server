@@ -1,20 +1,21 @@
 add_executable(server main.cpp)
 
-if(Boost_FOUND)
-  include_directories(${BOOST_ROOT})
-  include_directories(${Boost_INCLUDE_DIRS})
-  message("-- Boost link to: ${Boost_VERSION_STRING}")
-else()
+if(NOT Boost_FOUND)
   message(FATAL_ERROR "Boost not found!")
 endif()
 
+if(NOT OpenSSL_FOUND)
+  message(FATAL_ERROR "OpenSSL not found!")
+endif()
+
 add_library(LSERVER Server.cpp ChatUser.cpp
+  IChatUser.cpp
   ChatSpace.cpp
   ../common/MessageBlock.cpp
   ../common/MessageBuilder.cpp
   ../common/Message.cpp)
 
-target_link_libraries(server LSERVER ${Boost_LIBRARIES})
+target_link_libraries(server LSERVER ${Boost_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 
 target_include_directories(LSERVER
   PUBLIC

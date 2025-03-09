@@ -1,11 +1,11 @@
 add_executable(client main.cpp)
 
-if(Boost_FOUND)
-  include_directories(${BOOST_ROOT})
-  include_directories(${Boost_INCLUDE_DIRS})
-  message("-- Boost link to: ${Boost_VERSION_STRING}")
-else()
+if(NOT Boost_FOUND)
   message(FATAL_ERROR "Boost not found!")
+endif()
+
+if(NOT OpenSSL_FOUND)
+  message(FATAL_ERROR "OpenSSL not found!")
 endif()
 
 add_library(LCLIENT Client.cpp 
@@ -13,7 +13,7 @@ add_library(LCLIENT Client.cpp
 ../common/MessageBuilder.cpp
 ../common/Message.cpp)
 
-target_link_libraries(client LCLIENT ${Boost_LIBRARIES})
+target_link_libraries(client LCLIENT ${Boost_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 
 target_include_directories(LCLIENT
   PUBLIC

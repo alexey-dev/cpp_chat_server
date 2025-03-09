@@ -1,0 +1,44 @@
+#ifndef ICHAT_USER_HPP
+#define ICHAT_USER_HPP
+
+#include <memory>
+#include <queue>
+#include <map>
+#include <boost/asio.hpp>
+#include "../common/Message.hpp"
+#include "ChatSpace.hpp"
+
+class IChatUser
+{
+  public: // --- Constructor/Destructor ---
+    IChatUser(ChatSpace & _ChatSpace);
+
+    virtual ~IChatUser();
+
+  public: // --- Interface ---
+    virtual void Start() = 0;
+
+    void DeliverMessage(const MessagePtr _Message);
+
+  protected: // --- Service ---
+    virtual void DoReadDescriptor() = 0;
+
+    virtual void DoReadBody() = 0;
+
+    virtual void DoWrite() = 0;
+
+    void OnMessageBlockReceived(const MessageBlockPtr _BlockPtr);
+
+    void OnMessageReceived(const MessagePtr _MessagePtr);
+
+    void CheckReadyMessagesToRead();
+
+  protected: // --- Member variables ---
+    std::queue<MessageBlockPtr>   m_MessageBlocksToWrite;
+    std::map<int32_t, MessagePtr> m_MessagesToRead;
+    MessageBlockPtr               m_ReadMessageBlockPtr;
+    MessageBlockDescriptor        m_ReadDescriptor;
+    ChatSpace &                   m_ChatSpace;
+};
+
+#endif // ICHAT_USER_HPP

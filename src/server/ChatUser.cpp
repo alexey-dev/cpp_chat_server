@@ -3,8 +3,8 @@
 // --- Constructor ---
 ChatUser::ChatUser(boost::asio::ip::tcp::socket _Socket,
                    ChatSpace & _ChatSpace) :
-  m_Socket   (std::move(_Socket)),
-  m_ChatSpace(_ChatSpace)
+  IChatUser(_ChatSpace),
+  m_Socket (std::move(_Socket))
 {
 }
 
@@ -12,16 +12,6 @@ ChatUser::ChatUser(boost::asio::ip::tcp::socket _Socket,
 void ChatUser::Start()
 {
   DoReadDescriptor();
-}
-
-void ChatUser::DeliverMessage(const MessagePtr _MessagePtr)
-{
-  const std::vector<MessageBlockPtr> VecBlocks = _MessagePtr->GetVectorOfBlocks();
-
-  for (const MessageBlockPtr & BlockPtr : VecBlocks)
-    m_MessageBlocksToWrite.push(BlockPtr);
-
-  DoWrite();
 }
 
 // --- Service ---
@@ -83,36 +73,4 @@ void ChatUser::DoWrite()
 
       DoWrite();
     });
-}
-
-void ChatUser::OnMessageBlockReceived(const MessageBlockPtr _BlockPtr)
-{
-  if (m_MessagesToRead.end() == m_MessagesToRead.find(_BlockPtr->GetMessageID()))
-    m_MessagesToRead[_BlockPtr->GetMessageID()] = std::make_shared<Message>();
-
-  m_MessagesToRead[_BlockPtr->GetMessageID()]->AddBlock(_BlockPtr);
-
-  if (m_MessagesToRead[_BlockPtr->GetMessageID()]->HasAllBlocks())
-    CheckReadyMessagesToRead();
-}
-
-void ChatUser::OnMessageReceived(const MessagePtr _MessagePtr)
-{
-  m_ChatSpace.DeliverMessage(_MessagePtr);
-}
-
-void ChatUser::CheckReadyMessagesToRead()
-{
-  for (auto It = m_MessagesToRead.cbegin(); It != m_MessagesToRead.cend();)
-  {
-    if (It->second->HasAllBlocks())
-    {
-      OnMessageReceived(It->second);
-      It = m_MessagesToRead.erase(It);
-    }
-    else
-    {
-      ++It;
-    }
-  }
 }
