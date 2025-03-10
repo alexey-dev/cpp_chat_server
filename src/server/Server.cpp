@@ -4,7 +4,7 @@
 // --- Constructor ---
 Server::Server(boost::asio::io_context &              _IOContext,
                const boost::asio::ip::tcp::endpoint & _Endpoint) :
-  m_Acceptor(_IOContext, _Endpoint)
+  IServer(_IOContext, _Endpoint)
 {
   DoAccept();
 }

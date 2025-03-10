@@ -8,8 +8,11 @@ if(NOT OpenSSL_FOUND)
   message(FATAL_ERROR "OpenSSL not found!")
 endif()
 
-add_library(LCLIENT Client.cpp 
-../common/MessageBlock.cpp
+add_library(LCLIENT
+  IClient.cpp
+  Client.cpp
+  SslClient.cpp
+  ../common/MessageBlock.cpp
 ../common/MessageBuilder.cpp
 ../common/Message.cpp)
 

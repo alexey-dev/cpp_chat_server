@@ -3,50 +3,35 @@
 
 #include <iostream>
 #include <boost/asio.hpp>
+#include "IClient.hpp"
 #include "../common/Message.hpp"
 #include "../common/MessageBuilder.hpp"
 #include "../common/MessageBlock.hpp"
 #include <queue>
 #include <map>
 
-class Client
+class Client : public IClient
 {
   public: // --- Constructor ---
     Client(boost::asio::io_context &                            _IOContext,
            const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
 
   public: // --- Interface ---
-    void Write(const MessageBlockPtr & _Message);
-
-    void WriteText(char * _Message);
-
-    void Close();
+    void Close() override;
 
   private: // --- Service ---
-    void DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
+    void DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints) override;
 
-    void DoWrite();
+    void DoWrite() override;
 
-    void PostWrite();
+    void PostWrite() override;
 
-    void DoReadDescriptor();
+    void DoReadDescriptor() override;
 
-    void DoReadBody();
-
-    void OnMessageBlockReceived(const MessageBlockPtr _BlockPtr);
-
-    void OnMessageReceived(const MessagePtr _MessagePtr);
-
-    void CheckReadyMessagesToRead();
+    void DoReadBody() override;
 
   private: // --- Member variables ---
-    boost::asio::io_context&     m_IOContext;
     boost::asio::ip::tcp::socket m_Socket;
-    MessageBuilder               m_MessageBuilder;
-    std::queue<MessageBlockPtr>  m_MessagesToWrite;
-    std::map<int32_t, MessagePtr>      m_MessagesToRead;
-    MessageBlockPtr                    m_ReadMessageBlockPtr;
-    MessageBlockDescriptor             m_ReadDescriptor;
 };
 
 #endif // CLIENT_HPP

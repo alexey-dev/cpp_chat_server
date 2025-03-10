@@ -4,30 +4,12 @@
 // --- Constructor ---
 Client::Client(boost::asio::io_context &                            _IOContext,
                const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
-  m_IOContext(_IOContext),
+  IClient    (_IOContext, _Endpoints),
   m_Socket   (_IOContext)
 {
-  DoConnect(_Endpoints);
 }
 
 // --- Interface ---
-void Client::Write(const MessageBlockPtr & _Message)
-{
-  m_MessagesToWrite.push(_Message);
-
-  PostWrite();
-}
-
-void Client::WriteText(char * _Message)
-{
-  const std::vector<MessageBlockPtr> Blocks = m_MessageBuilder.CreateBlocksFromRawMessage(_Message);
-
-  for (const MessageBlockPtr & Ptr : Blocks)
-    m_MessagesToWrite.push(Ptr);
-
-  PostWrite();
-}
-
 void Client::Close()
 {
   boost::asio::post(m_IOContext, [this]()
@@ -111,36 +93,4 @@ void Client::DoReadBody()
       OnMessageBlockReceived(m_ReadMessageBlockPtr);
       DoReadDescriptor();
     });
-}
-
-void Client::OnMessageBlockReceived(const MessageBlockPtr _BlockPtr)
-{
-  if (m_MessagesToRead.end() == m_MessagesToRead.find(_BlockPtr->GetMessageID()))
-    m_MessagesToRead[_BlockPtr->GetMessageID()] = std::make_shared<Message>();
-
-  m_MessagesToRead[_BlockPtr->GetMessageID()]->AddBlock(_BlockPtr);
-
-  if (m_MessagesToRead[_BlockPtr->GetMessageID()]->HasAllBlocks())
-    CheckReadyMessagesToRead();
-}
-
-void Client::OnMessageReceived(const MessagePtr _MessagePtr)
-{
-  std::cout << "Received: " << _MessagePtr->GetBody() << std::endl;
-}
-
-void Client::CheckReadyMessagesToRead()
-{
-  for (auto It = m_MessagesToRead.cbegin(); It != m_MessagesToRead.cend();)
-  {
-    if (It->second->HasAllBlocks())
-    {
-      OnMessageReceived(It->second);
-      It = m_MessagesToRead.erase(It);
-    }
-    else
-    {
-      ++It;
-    }
-  }
 }

@@ -5,19 +5,19 @@
 #include <memory>
 #include "../common/Message.hpp"
 
-class ChatUser;
+class IChatUser;
 
 class ChatSpace
 {
   public: // --- Interface ---
-    void JoinUser(std::shared_ptr<ChatUser> _User);
+    void JoinUser(std::shared_ptr<IChatUser> _User);
 
-    void LeaveUser(std::shared_ptr<ChatUser> _User);
+    void LeaveUser(std::shared_ptr<IChatUser> _User);
 
     void DeliverMessage(const MessagePtr _MessagePtr);
 
   private: // --- Member variables ---
-    std::set<std::shared_ptr<ChatUser>> m_Users;
+    std::set<std::shared_ptr<IChatUser>> m_Users;
 };
 
 #endif // CHAT_SPACE_HPP

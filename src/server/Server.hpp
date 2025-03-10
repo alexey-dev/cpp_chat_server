@@ -2,20 +2,16 @@
 #define SERVER_HPP
 
 #include <boost/asio.hpp>
-#include "ChatSpace.hpp"
+#include "IServer.hpp"
 
-class Server
+class Server : public IServer
 {
   public: // --- Constructor ---
     Server(boost::asio::io_context &              _IOContext,
            const boost::asio::ip::tcp::endpoint & _Endpoint);
 
   private: // Service
-    void DoAccept();
-
-  private: // --- Member variables ---
-    boost::asio::ip::tcp::acceptor m_Acceptor;
-    ChatSpace                      m_ChatSpace;
+    void DoAccept() override;
 };
 
 #endif // SERVER_HPP

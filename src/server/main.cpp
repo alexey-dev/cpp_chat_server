@@ -1,6 +1,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include "Server.hpp"
+#include "SslServer.hpp"
 
 int main(int _Argc, char * _Argv[])
 {
@@ -14,8 +15,9 @@ int main(int _Argc, char * _Argv[])
 
     boost::asio::io_context        IOContext;
     boost::asio::ip::tcp::endpoint Endpoint(boost::asio::ip::tcp::v4(), std::atoi(_Argv[1]));
-    Server                         MainServer(IOContext, Endpoint);
+    SslServer                      MainServer(IOContext, Endpoint);
 
+    MainServer.Start();
     IOContext.run();
   }
   catch (std::exception & _Exception)
