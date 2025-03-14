@@ -29,7 +29,7 @@ class SslChatUser : public IChatUser, public std::enable_shared_from_this<SslCha
     void DoWrite() override;
 
   private: // --- Member variables ---
-    boost::asio::ssl::stream<boost::asio::ip::tcp::socket>  m_Socket;
+    boost::asio::ssl::stream<boost::asio::ip::tcp::socket> m_Socket;
 };
 
 #endif // SSL_CHAT_USER_HPP

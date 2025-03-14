@@ -10,7 +10,7 @@ class Server : public IServer
     Server(boost::asio::io_context &              _IOContext,
            const boost::asio::ip::tcp::endpoint & _Endpoint);
 
-  private: // Service
+  private: // --- Service ---
     void DoAccept() override;
 };
 

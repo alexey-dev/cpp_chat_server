@@ -15,7 +15,7 @@ class IServer
   public: // --- Interface ---
     void Start();
 
-  protected: // Service
+  protected: // --- Service ---
     virtual void DoAccept() = 0;
 
   protected: // --- Member variables ---

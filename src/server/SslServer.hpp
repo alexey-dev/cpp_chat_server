@@ -11,7 +11,7 @@ class SslServer : public IServer
     SslServer(boost::asio::io_context &              _IOContext,
            const boost::asio::ip::tcp::endpoint & _Endpoint);
 
-  private: // Service
+  private: // --- Service ---
     void DoAccept() override;
 
   private: // --- Member variables ---

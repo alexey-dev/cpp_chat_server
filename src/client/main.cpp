@@ -15,12 +15,11 @@ int main(int _Argc, char* _Argv[])
       return 1;
     }
 
-    boost::asio::io_context IOContext;
+    boost::asio::io_context                      IOContext;
+    boost::asio::ip::tcp::resolver               Resolver(IOContext);
+    boost::asio::ip::tcp::resolver::results_type Endpoints = Resolver.resolve(_Argv[1], _Argv[2]);
+    boost::asio::ssl::context                    SslContext(boost::asio::ssl::context::sslv23);
 
-    boost::asio::ip::tcp::resolver Resolver(IOContext);
-    auto Endpoints = Resolver.resolve(_Argv[1], _Argv[2]);
-
-    boost::asio::ssl::context SslContext(boost::asio::ssl::context::sslv23);
     SslContext.load_verify_file("sslkeys/selfsigned.crt");
 
     SslClient ClientMessenger(IOContext, SslContext, Endpoints);
@@ -34,6 +33,7 @@ int main(int _Argc, char* _Argv[])
       });
 
     char Line[MESSAGE_SIZE + 1];
+
     while (std::cin.getline(Line, MESSAGE_SIZE))
     {
       ClientMessenger.WriteText(Line);
