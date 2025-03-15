@@ -2,19 +2,22 @@
 #include <boost/asio.hpp>
 #include "Server.hpp"
 #include "SslServer.hpp"
+#include "ServerArgumentsParser.hpp"
 
 int main(int _Argc, char * _Argv[])
 {
   try
   {
-    if (2 != _Argc)
+    ServerArgumentsParser Parser;
+
+    if (!Parser.Parse(_Argc, _Argv))
     {
-      std::cerr << "Format: server 'port'" << std::endl;
       return 1;
     }
 
+    const InputArguments &         Arguments = Parser.GetArguments();
     boost::asio::io_context        IOContext;
-    boost::asio::ip::tcp::endpoint Endpoint(boost::asio::ip::tcp::v4(), std::atoi(_Argv[1]));
+    boost::asio::ip::tcp::endpoint Endpoint(boost::asio::ip::tcp::v4(), Arguments.Port);
     SslServer                      MainServer(IOContext, Endpoint);
 
     MainServer.Start();

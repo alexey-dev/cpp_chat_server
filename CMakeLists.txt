@@ -3,7 +3,7 @@ project(Messenger)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Boost REQUIRED COMPONENTS locale)
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 if(Boost_FOUND)
     include_directories(${BOOST_ROOT})

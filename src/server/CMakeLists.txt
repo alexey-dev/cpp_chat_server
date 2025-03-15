@@ -16,6 +16,7 @@ add_library(LSERVER
   ChatUser.cpp
   SslChatUser.cpp
   ChatSpace.cpp
+  ServerArgumentsParser.cpp
   ../common/MessageBlock.cpp
   ../common/MessageBuilder.cpp
   ../common/Message.cpp)
