@@ -12,6 +12,7 @@ add_library(LCLIENT
   IClient.cpp
   Client.cpp
   SslClient.cpp
+  ClientArgumentsParser.cpp
   ../common/MessageBlock.cpp
 ../common/MessageBuilder.cpp
 ../common/Message.cpp)

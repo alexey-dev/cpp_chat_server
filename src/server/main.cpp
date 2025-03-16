@@ -8,14 +8,14 @@ int main(int _Argc, char * _Argv[])
 {
   try
   {
-    ServerArgumentsParser Parser;
+    ServerArgumentsParser ArgumentsParser;
 
-    if (!Parser.Parse(_Argc, _Argv))
+    if (!ArgumentsParser.Parse(_Argc, _Argv))
     {
       return 1;
     }
 
-    const InputArguments &         Arguments = Parser.GetArguments();
+    const InputArguments &         Arguments = ArgumentsParser.GetArguments();
     boost::asio::io_context        IOContext;
     boost::asio::ip::tcp::endpoint Endpoint(boost::asio::ip::tcp::v4(), Arguments.Port);
     SslServer                      MainServer(IOContext, Endpoint);

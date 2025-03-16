@@ -2,6 +2,7 @@
 #include <boost/asio.hpp>
 #include "Client.hpp"
 #include "SslClient.hpp"
+#include "ClientArgumentsParser.hpp"
 
 constexpr size_t MESSAGE_SIZE = 100;
 
@@ -9,15 +10,16 @@ int main(int _Argc, char* _Argv[])
 {
   try
   {
-    if (3 != _Argc)
+    ClientArgumentsParser ArgumentsParser;
+    if (!ArgumentsParser.Parse(_Argc, _Argv))
     {
-      std::cerr << "Format: client 'host' 'port'" << std::endl;
       return 1;
     }
 
+    const InputArguments &                       Arguments = ArgumentsParser.GetArguments();
     boost::asio::io_context                      IOContext;
     boost::asio::ip::tcp::resolver               Resolver(IOContext);
-    boost::asio::ip::tcp::resolver::results_type Endpoints = Resolver.resolve(_Argv[1], _Argv[2]);
+    boost::asio::ip::tcp::resolver::results_type Endpoints = Resolver.resolve(Arguments.Host, std::to_string(Arguments.Port));
     boost::asio::ssl::context                    SslContext(boost::asio::ssl::context::sslv23);
 
     SslContext.load_verify_file("sslkeys/selfsigned.crt");
