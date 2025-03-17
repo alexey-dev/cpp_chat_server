@@ -1,16 +1,16 @@
-#include "Client.hpp"
+#include "PlainClient.hpp"
 #include <vector>
 
 // --- Constructor ---
-Client::Client(boost::asio::io_context &                            _IOContext,
-               const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
-  IClient    (_IOContext, _Endpoints),
-  m_Socket   (_IOContext)
+PlainClient::PlainClient(boost::asio::io_context &                            _IOContext,
+                         const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
+  IClient  (_IOContext, _Endpoints),
+  m_Socket (_IOContext)
 {
 }
 
 // --- Interface ---
-void Client::Close()
+void PlainClient::Close()
 {
   boost::asio::post(m_IOContext, [this]()
     {
@@ -19,7 +19,7 @@ void Client::Close()
 }
 
 // --- Service ---
-void Client::DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints)
+void PlainClient::DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints)
 {
   boost::asio::async_connect(m_Socket, _Endpoints,
     [this](boost::system::error_code _ErrorCode, boost::asio::ip::tcp::endpoint _EndpointsInternal)
@@ -31,7 +31,7 @@ void Client::DoConnect(const boost::asio::ip::tcp::resolver::results_type & _End
     });
 }
 
-void Client::DoWrite()
+void PlainClient::DoWrite()
 {
   boost::asio::async_write(m_Socket,
     boost::asio::buffer(m_MessagesToWrite.front()->GetStartDataAddress(),
@@ -51,7 +51,7 @@ void Client::DoWrite()
       });
 }
 
-void Client::PostWrite()
+void PlainClient::PostWrite()
 {
   if (m_MessagesToWrite.empty())
     return;
@@ -62,7 +62,7 @@ void Client::PostWrite()
       DoWrite();
     });
 }
-void Client::DoReadDescriptor()
+void PlainClient::DoReadDescriptor()
 {
   boost::asio::async_read(m_Socket, boost::asio::buffer(std::addressof(m_ReadDescriptor), MessageBlock::DESCRIPTOR_SIZE),
     [this](boost::system::error_code _ErrorCode, std::size_t _Length)
@@ -77,7 +77,7 @@ void Client::DoReadDescriptor()
     });
 }
 
-void Client::DoReadBody()
+void PlainClient::DoReadBody()
 {
   m_ReadMessageBlockPtr = std::make_shared<MessageBlock>(m_ReadDescriptor);
 

@@ -1,5 +1,5 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#ifndef PLAIN_CLIENT_HPP
+#define PLAIN_CLIENT_HPP
 
 #include <iostream>
 #include <boost/asio.hpp>
@@ -10,11 +10,11 @@
 #include <queue>
 #include <map>
 
-class Client : public IClient
+class PlainClient : public IClient
 {
   public: // --- Constructor ---
-    Client(boost::asio::io_context &                            _IOContext,
-           const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
+    PlainClient(boost::asio::io_context &                            _IOContext,
+                const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
 
   public: // --- Interface ---
     void Close() override;
@@ -34,4 +34,4 @@ class Client : public IClient
     boost::asio::ip::tcp::socket m_Socket;
 };
 
-#endif // CLIENT_HPP
+#endif // PLAIN_CLIENT_HPP

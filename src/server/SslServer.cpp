@@ -3,13 +3,11 @@
 
 // --- Constructor ---
 SslServer::SslServer(boost::asio::io_context &              _IOContext,
+                     boost::asio::ssl::context::method      _SslMethod,
                      const boost::asio::ip::tcp::endpoint & _Endpoint) :
   IServer     (_IOContext, _Endpoint),
-  m_SslContext(boost::asio::ssl::context::sslv23)
+  m_SslContext(_SslMethod)
 {
-  m_SslContext.set_options(boost::asio::ssl::context::default_workarounds | boost::asio::ssl::context::no_sslv2);
-  m_SslContext.use_certificate_chain_file("sslkeys/selfsigned.crt");
-  m_SslContext.use_private_key_file("sslkeys/private.key", boost::asio::ssl::context::pem);
 }
 
 // --- Service ---
@@ -31,4 +29,16 @@ void SslServer::DoAccept()
 
       DoAccept();
     });
+}
+
+void SslServer::SetSslContextOptions(boost::asio::ssl::context_base::options _Options)
+{
+  m_SslContext.set_options(_Options);
+}
+
+void SslServer::SetSslKeysPaths(const std::string & _PrivateKeyPath,
+                                const std::string & _CertificatePath)
+{
+  m_SslContext.use_certificate_chain_file(_CertificatePath);
+  m_SslContext.use_private_key_file(_PrivateKeyPath, boost::asio::ssl::context::pem);
 }

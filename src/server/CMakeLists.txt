@@ -8,9 +8,12 @@ if(NOT OpenSSL_FOUND)
   message(FATAL_ERROR "OpenSSL not found!")
 endif()
 
-add_library(LSERVER 
+add_library(LSERVER
+  IServerBuilder.cpp
+  PlainServerBuilder.cpp
+  SslServerBuilder.cpp
   IServer.cpp
-  Server.cpp
+  PlainServer.cpp
   SslServer.cpp
   IChatUser.cpp
   ChatUser.cpp

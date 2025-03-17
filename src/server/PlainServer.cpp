@@ -1,16 +1,16 @@
-#include "Server.hpp"
+#include "PlainServer.hpp"
 #include "ChatUser.hpp"
 
 // --- Constructor ---
-Server::Server(boost::asio::io_context &              _IOContext,
-               const boost::asio::ip::tcp::endpoint & _Endpoint) :
+PlainServer::PlainServer(boost::asio::io_context &              _IOContext,
+                         const boost::asio::ip::tcp::endpoint & _Endpoint) :
   IServer(_IOContext, _Endpoint)
 {
   DoAccept();
 }
 
 // --- Service ---
-void Server::DoAccept()
+void PlainServer::DoAccept()
 {
   m_Acceptor.async_accept(
     [this](boost::system::error_code _ErrorCode,

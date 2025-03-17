@@ -10,7 +10,10 @@ endif()
 
 add_library(LCLIENT
   IClient.cpp
-  Client.cpp
+  IClientBuilder.cpp
+  PlainClientBuilder.cpp
+  SslClientBuilder.cpp
+  PlainClient.cpp
   SslClient.cpp
   ClientArgumentsParser.cpp
   ../common/MessageBlock.cpp
