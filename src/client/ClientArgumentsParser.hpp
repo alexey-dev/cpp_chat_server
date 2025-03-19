@@ -10,7 +10,7 @@ class ClientArgumentsParser
     ClientArgumentsParser();
 
   public: // --- Interface ---
-    bool Parse(int _Argc,
+    bool Parse(int    _Argc,
                char * _Argv[]);
 
     const InputArguments & GetArguments() const;

@@ -1,15 +1,8 @@
 #ifndef SSL_CLIENT_HPP
 #define SSL_CLIENT_HPP
 
-#include <iostream>
-#include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 #include "IClient.hpp"
-#include "../common/Message.hpp"
-#include "../common/MessageBuilder.hpp"
-#include "../common/MessageBlock.hpp"
-#include <queue>
-#include <map>
 
 class SslClient : public IClient
 {

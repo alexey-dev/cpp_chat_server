@@ -1,5 +1,4 @@
 #include "SslClient.hpp"
-#include <vector>
 
 // --- Constructor ---
 SslClient::SslClient(boost::asio::io_context &                            _IOContext,

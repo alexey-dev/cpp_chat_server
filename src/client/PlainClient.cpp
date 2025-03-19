@@ -1,5 +1,4 @@
 #include "PlainClient.hpp"
-#include <vector>
 
 // --- Constructor ---
 PlainClient::PlainClient(boost::asio::io_context &                            _IOContext,

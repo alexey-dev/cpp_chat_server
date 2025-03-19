@@ -1,13 +1,12 @@
 #ifndef ICLIENT_HPP
 #define ICLIENT_HPP
 
-#include <iostream>
+#include <queue>
+#include <map>
 #include <boost/asio.hpp>
 #include "../common/Message.hpp"
 #include "../common/MessageBuilder.hpp"
 #include "../common/MessageBlock.hpp"
-#include <queue>
-#include <map>
 
 class IClient
 {
