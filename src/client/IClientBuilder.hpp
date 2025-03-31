@@ -20,6 +20,9 @@ class IClientBuilder
 
     virtual void InitSpecificSettings() = 0;
 
+  protected: // --- Service ---
+    const LoginData GetLoginData() const;
+
   protected: // --- Member variables ---
     std::shared_ptr<IClient>  m_Client;
     const InputArguments &    m_Arguments;

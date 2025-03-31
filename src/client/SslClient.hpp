@@ -9,7 +9,8 @@ class SslClient : public IClient
   public: // --- Constructor ---
     SslClient(boost::asio::io_context &                            _IOContext,
               boost::asio::ssl::context &                          _SslContext,
-              const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
+              const boost::asio::ip::tcp::resolver::results_type & _Endpoints,
+              const LoginData &                                    _LoginData);
 
   public: // --- Interface ---
     void Close() override;
@@ -21,6 +22,8 @@ class SslClient : public IClient
     void DoHandshake();
 
     void DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints) override;
+
+    void DoLogin() override;
 
     void DoWrite() override;
 

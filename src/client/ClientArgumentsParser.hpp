@@ -21,6 +21,7 @@ class ClientArgumentsParser
     static const char * PORT_KEY;
     static const char * SSL_KEY;
     static const char * CERT_KEY;
+    static const char * USER_ID_KEY;
 
   private: // --- Member variables ---
     InputArguments                              m_Arguments;

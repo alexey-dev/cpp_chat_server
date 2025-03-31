@@ -6,9 +6,10 @@
 #include <map>
 #include <boost/asio.hpp>
 #include "../common/Message.hpp"
+#include "../common/LoginData.hpp"
 #include "ChatSpace.hpp"
 
-class IChatUser
+class IChatUser : public std::enable_shared_from_this<IChatUser>
 {
   public: // --- Constructor/Destructor ---
     IChatUser(ChatSpace & _ChatSpace);
@@ -20,12 +21,22 @@ class IChatUser
 
     void DeliverMessage(const MessagePtr _Message);
 
+    void OnLoginSuccessful();
+
+    void OnLoginFailed();
+
+    const LoginData & GetLoginData() const;
+
   protected: // --- Service ---
+    virtual void DoReadLogin() = 0;
+
     virtual void DoReadDescriptor() = 0;
 
     virtual void DoReadBody() = 0;
 
     virtual void DoWrite() = 0;
+
+    void OnLoginDataReceived();
 
     void OnMessageBlockReceived(const MessageBlockPtr _BlockPtr);
 
@@ -38,6 +49,7 @@ class IChatUser
     std::map<int32_t, MessagePtr> m_MessagesToRead;
     MessageBlockPtr               m_ReadMessageBlockPtr;
     MessageBlockDescriptor        m_ReadDescriptor;
+    LoginData                     m_LoginData;
     ChatSpace &                   m_ChatSpace;
 };
 

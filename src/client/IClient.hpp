@@ -4,6 +4,7 @@
 #include <queue>
 #include <map>
 #include <boost/asio.hpp>
+#include "../common/LoginData.hpp"
 #include "../common/Message.hpp"
 #include "../common/MessageBuilder.hpp"
 #include "../common/MessageBlock.hpp"
@@ -12,7 +13,8 @@ class IClient
 {
   public: // --- Constructor/Destructor ---
     IClient(boost::asio::io_context &                            _IOContext,
-            const boost::asio::ip::tcp::resolver::results_type & _Endpoints);
+            const boost::asio::ip::tcp::resolver::results_type & _Endpoints,
+            const LoginData &                                    _LoginData);
 
     virtual ~IClient();
 
@@ -27,6 +29,8 @@ class IClient
 
   protected: // --- Service ---
     virtual void DoConnect(const boost::asio::ip::tcp::resolver::results_type & _Endpoints) = 0;
+
+    virtual void DoLogin() = 0;
 
     virtual void DoWrite() = 0;
 
@@ -50,6 +54,7 @@ class IClient
     std::map<int32_t, MessagePtr>                      m_MessagesToRead;
     MessageBlockPtr                                    m_ReadMessageBlockPtr;
     MessageBlockDescriptor                             m_ReadDescriptor;
+    LoginData                                          m_LoginData;
 };
 
 #endif // ICLIENT_HPP

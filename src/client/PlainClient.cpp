@@ -2,8 +2,9 @@
 
 // --- Constructor ---
 PlainClient::PlainClient(boost::asio::io_context &                            _IOContext,
-                         const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
-  IClient  (_IOContext, _Endpoints),
+                         const boost::asio::ip::tcp::resolver::results_type & _Endpoints,
+                         const LoginData &                                    _LoginData) :
+  IClient  (_IOContext, _Endpoints, _LoginData),
   m_Socket (_IOContext)
 {
 }
@@ -26,8 +27,25 @@ void PlainClient::DoConnect(const boost::asio::ip::tcp::resolver::results_type &
       if (_ErrorCode)
         return;
 
-      DoReadDescriptor();
+      DoLogin();
     });
+}
+
+void PlainClient::DoLogin()
+{
+  boost::asio::async_write(m_Socket,
+    boost::asio::buffer(std::addressof(m_LoginData),
+                        sizeof(LoginData)),
+      [this](boost::system::error_code _ErrorCode, std::size_t _Length)
+      {
+        if (_ErrorCode)
+        {
+          Close();
+          return;
+        }
+
+        DoReadDescriptor();
+      });
 }
 
 void PlainClient::DoWrite()

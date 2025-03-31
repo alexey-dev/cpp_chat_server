@@ -17,7 +17,7 @@ void SslChatUser::Start()
 // --- Service ---
 void SslChatUser::DoHandshake()
 {
-  std::shared_ptr<SslChatUser> SelfCounter(shared_from_this());
+  std::shared_ptr<IChatUser> SelfCounter(shared_from_this());
 
   m_Socket.async_handshake(boost::asio::ssl::stream_base::server,
       [this, SelfCounter](const boost::system::error_code & _ErrorCode)
@@ -28,13 +28,31 @@ void SslChatUser::DoHandshake()
           return;
         }
 
-        DoReadDescriptor();
+        DoReadLogin();
       });
+}
+
+void SslChatUser::DoReadLogin()
+{
+  std::shared_ptr<IChatUser> SelfCounter(shared_from_this());
+
+  boost::asio::async_read(m_Socket,
+                          boost::asio::buffer(std::addressof(m_LoginData), sizeof(LoginData)),
+    [this, SelfCounter](boost::system::error_code _ErrorCode, std::size_t _Length)
+    {
+      if (_ErrorCode)
+      {
+        m_ChatSpace.LeaveUser(shared_from_this());
+        return;
+      }
+
+      OnLoginDataReceived();
+    });
 }
 
 void SslChatUser::DoReadDescriptor()
 {
-  std::shared_ptr<SslChatUser> SelfCounter(shared_from_this());
+  std::shared_ptr<IChatUser> SelfCounter(shared_from_this());
 
   boost::asio::async_read(m_Socket,
                           boost::asio::buffer(std::addressof(m_ReadDescriptor), MessageBlock::DESCRIPTOR_SIZE),
@@ -52,7 +70,7 @@ void SslChatUser::DoReadDescriptor()
 
 void SslChatUser::DoReadBody()
 {
-  std::shared_ptr<SslChatUser> SelfCounter(shared_from_this());
+  std::shared_ptr<IChatUser> SelfCounter(shared_from_this());
   m_ReadMessageBlockPtr = std::make_shared<MessageBlock>(m_ReadDescriptor);
 
   boost::asio::async_read(m_Socket,
@@ -72,7 +90,7 @@ void SslChatUser::DoReadBody()
 
 void SslChatUser::DoWrite()
 {
-  std::shared_ptr<SslChatUser> SelfCounter(shared_from_this());
+  std::shared_ptr<IChatUser> SelfCounter(shared_from_this());
 
   boost::asio::async_write(m_Socket, boost::asio::buffer(m_MessageBlocksToWrite.front()->GetStartDataAddress(), m_MessageBlocksToWrite.front()->GetDataSize()),
     [this, SelfCounter](boost::system::error_code _ErrorCode, std::size_t _Length)

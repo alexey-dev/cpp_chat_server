@@ -2,11 +2,12 @@
 #include <iostream>
 
 // --- Constants ---
-const char * ClientArgumentsParser::HELP_KEY = "help";
-const char * ClientArgumentsParser::HOST_KEY = "host";
-const char * ClientArgumentsParser::PORT_KEY = "port";
-const char * ClientArgumentsParser::SSL_KEY  = "ssl";
-const char * ClientArgumentsParser::CERT_KEY = "cert";
+const char * ClientArgumentsParser::HELP_KEY    = "help";
+const char * ClientArgumentsParser::HOST_KEY    = "host";
+const char * ClientArgumentsParser::PORT_KEY    = "port";
+const char * ClientArgumentsParser::SSL_KEY     = "ssl";
+const char * ClientArgumentsParser::CERT_KEY    = "cert";
+const char * ClientArgumentsParser::USER_ID_KEY = "userid";
 
 // --- Constructor ---
 ClientArgumentsParser::ClientArgumentsParser() :
@@ -14,11 +15,12 @@ ClientArgumentsParser::ClientArgumentsParser() :
   m_Arguments({"", "", -1, false})
 {
   m_Description.add_options()
-      (HELP_KEY, "[optional] show help message")
-      (HOST_KEY, boost::program_options::value<std::string>(), "connection host")
-      (PORT_KEY, boost::program_options::value<int>(),         "connection port")
-      (SSL_KEY,  "[optional] activate SSL mode")
-      (CERT_KEY, boost::program_options::value<std::string>(), "[optional] path to certificate for SSL");
+      (HELP_KEY,    "[optional] show help message")
+      (HOST_KEY,    boost::program_options::value<std::string>(), "connection host")
+      (PORT_KEY,    boost::program_options::value<int>(),         "connection port")
+      (USER_ID_KEY, boost::program_options::value<uint64_t>(),    "userid")
+      (SSL_KEY,     "[optional] activate SSL mode")
+      (CERT_KEY,    boost::program_options::value<std::string>(), "[optional] path to certificate for SSL");
 }
 
 // --- Interface ---
@@ -47,8 +49,15 @@ bool ClientArgumentsParser::Parse(int    _Argc,
     return false;
   }
 
-  m_Arguments.Host = VariablesMap[HOST_KEY].as<std::string>();
-  m_Arguments.Port = VariablesMap[PORT_KEY].as<int>();
+  if (!VariablesMap.count(USER_ID_KEY))
+  {
+    std::cout << "Error: no userid.\n" << m_Description << std::endl;
+    return false;
+  }
+
+  m_Arguments.Host   = VariablesMap[HOST_KEY].as<std::string>();
+  m_Arguments.Port   = VariablesMap[PORT_KEY].as<int>();
+  m_Arguments.UserID = VariablesMap[USER_ID_KEY].as<uint64_t>();
 
   if (!VariablesMap.count(SSL_KEY))
     return true;

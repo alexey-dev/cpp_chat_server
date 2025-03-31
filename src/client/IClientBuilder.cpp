@@ -17,3 +17,9 @@ std::shared_ptr<IClient> IClientBuilder::GetProduct()
 {
   return m_Client;
 }
+
+// --- Service ---
+const LoginData IClientBuilder::GetLoginData() const
+{
+  return {m_Arguments.UserID};
+}

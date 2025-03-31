@@ -10,7 +10,7 @@
 #include "IChatUser.hpp"
 #include "ChatSpace.hpp"
 
-class SslChatUser : public IChatUser, public std::enable_shared_from_this<SslChatUser>
+class SslChatUser : public IChatUser
 {
   public: // --- Constructor ---
     SslChatUser(boost::asio::ssl::stream<boost::asio::ip::tcp::socket> _Socket,
@@ -21,6 +21,8 @@ class SslChatUser : public IChatUser, public std::enable_shared_from_this<SslCha
 
   private: // --- Service ---
     void DoHandshake();
+
+    void DoReadLogin() override;
 
     void DoReadDescriptor() override;
 

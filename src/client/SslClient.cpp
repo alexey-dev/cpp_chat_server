@@ -3,8 +3,9 @@
 // --- Constructor ---
 SslClient::SslClient(boost::asio::io_context &                            _IOContext,
                      boost::asio::ssl::context &                          _SslContext,
-                     const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
-  IClient  (_IOContext, _Endpoints),
+                     const boost::asio::ip::tcp::resolver::results_type & _Endpoints,
+                     const LoginData &                                    _LoginData) :
+  IClient  (_IOContext, _Endpoints, _LoginData),
   m_Socket (_IOContext, _SslContext)
 {
   m_Socket.set_verify_mode(boost::asio::ssl::verify_peer);
@@ -46,7 +47,7 @@ void SslClient::DoHandshake()
         std::cout << "Handshake failed: " << _Error.message() << std::endl;
       }
 
-      DoReadDescriptor();
+      DoLogin();
     });
 }
 
@@ -60,6 +61,23 @@ void SslClient::DoConnect(const boost::asio::ip::tcp::resolver::results_type & _
 
       DoHandshake();
     });
+}
+
+void SslClient::DoLogin()
+{
+  boost::asio::async_write(m_Socket,
+    boost::asio::buffer(std::addressof(m_LoginData),
+                        sizeof(LoginData)),
+      [this](boost::system::error_code _ErrorCode, std::size_t _Length)
+      {
+        if (_ErrorCode)
+        {
+          Close();
+          return;
+        }
+
+        DoReadDescriptor();
+      });
 }
 
 void SslClient::DoWrite()

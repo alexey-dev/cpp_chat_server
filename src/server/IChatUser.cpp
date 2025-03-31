@@ -21,7 +21,27 @@ void IChatUser::DeliverMessage(const MessagePtr _MessagePtr)
   DoWrite();
 }
 
+void IChatUser::OnLoginSuccessful()
+{
+  DoReadDescriptor();
+}
+
+void IChatUser::OnLoginFailed()
+{
+  // Empty
+}
+
+const LoginData & IChatUser::GetLoginData() const
+{
+  return m_LoginData;
+}
+
 // --- Service ---
+void IChatUser::OnLoginDataReceived()
+{
+  m_ChatSpace.UserLogin(shared_from_this());
+}
+
 void IChatUser::OnMessageBlockReceived(const MessageBlockPtr _BlockPtr)
 {
   if (m_MessagesToRead.end() == m_MessagesToRead.find(_BlockPtr->GetMessageID()))

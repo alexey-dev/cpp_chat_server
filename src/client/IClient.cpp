@@ -3,9 +3,11 @@
 
 // --- Constructor/Destructor ---
 IClient::IClient(boost::asio::io_context &                            _IOContext,
-                 const boost::asio::ip::tcp::resolver::results_type & _Endpoints) :
+                 const boost::asio::ip::tcp::resolver::results_type & _Endpoints,
+                 const LoginData &                                    _LoginData) :
   m_IOContext(_IOContext),
-  m_Endpoints(_Endpoints)
+  m_Endpoints(_Endpoints),
+  m_LoginData(_LoginData)
 {
 }
 

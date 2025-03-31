@@ -9,6 +9,7 @@ struct InputArguments
   std::string CertificateSSLPath;
   int         Port;
   bool        IsSSLActive;
+  uint64_t    UserID;
 };
 
 #endif //CINPUT_ARGUMENTS_HPP

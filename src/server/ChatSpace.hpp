@@ -14,7 +14,12 @@ class ChatSpace
 
     void LeaveUser(std::shared_ptr<IChatUser> _User);
 
+    void UserLogin(std::shared_ptr<IChatUser> _User);
+
     void DeliverMessage(const MessagePtr _MessagePtr);
+
+  private: // --- Sevice ---
+    bool IsUserLoginValid(std::shared_ptr<IChatUser> _User) const;
 
   private: // --- Member variables ---
     std::set<std::shared_ptr<IChatUser>> m_Users;

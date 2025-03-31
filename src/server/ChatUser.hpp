@@ -9,7 +9,7 @@
 #include "IChatUser.hpp"
 #include "ChatSpace.hpp"
 
-class ChatUser : public IChatUser, public std::enable_shared_from_this<ChatUser>
+class ChatUser : public IChatUser
 {
   public: // --- Constructor ---
     ChatUser(boost::asio::ip::tcp::socket _Socket,
@@ -19,6 +19,8 @@ class ChatUser : public IChatUser, public std::enable_shared_from_this<ChatUser>
     void Start() override;
 
   private: // --- Service ---
+    void DoReadLogin() override;
+
     void DoReadDescriptor() override;
 
     void DoReadBody() override;
