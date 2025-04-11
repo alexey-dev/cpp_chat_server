@@ -9,6 +9,8 @@ if(NOT OpenSSL_FOUND)
 endif()
 
 add_library(LSERVER
+  IUserLoginValidator.cpp
+  PlainUserLoginValidator.cpp
   IServerBuilder.cpp
   PlainServerBuilder.cpp
   SslServerBuilder.cpp

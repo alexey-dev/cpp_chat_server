@@ -1,6 +1,13 @@
 #include "ChatSpace.hpp"
 #include "IChatUser.hpp"
 
+// --- Constructor ---
+ChatSpace::ChatSpace(std::shared_ptr<IUserLoginValidator> _Validator) :
+  m_UserLoginValidator(_Validator)
+{
+  // Empty
+}
+
 // --- Interface ---
 void ChatSpace::JoinUser(std::shared_ptr<IChatUser> _User)
 {
@@ -18,16 +25,10 @@ void ChatSpace::LeaveUser(std::shared_ptr<IChatUser> _User)
 
 void ChatSpace::UserLogin(std::shared_ptr<IChatUser> _User)
 {
-  if (!IsUserLoginValid(_User))
-  {
-    LeaveUser(_User);
+  auto SuccessCallback = std::bind(&ChatSpace::LoginValidationSucceded, *this, std::placeholders::_1);
+  auto FailCallback    = std::bind(&ChatSpace::LoginValidationFailed, *this, std::placeholders::_1);
 
-    return;
-  }
-
-  std::cout << "User successfully logged in" << std::endl;
-
-  _User->OnLoginSuccessful();
+  m_UserLoginValidator->ValidateUserLogin(_User, SuccessCallback, FailCallback);
 }
 
 void ChatSpace::DeliverMessage(const MessagePtr _MessagePtr)
@@ -39,11 +40,14 @@ void ChatSpace::DeliverMessage(const MessagePtr _MessagePtr)
 }
 
 // --- Sevice ---
-bool ChatSpace::IsUserLoginValid(std::shared_ptr<IChatUser> _User) const
+void ChatSpace::LoginValidationSucceded(std::shared_ptr<IChatUser> _User)
 {
-  const LoginData & Data = _User->GetLoginData();
+  _User->OnLoginSuccessful();
+  std::cout << "User "<< _User->GetLoginData().UserID << " successfully logged in" << std::endl;
+}
 
-  // TODO: Check login validation later
-
-  return true;
+void ChatSpace::LoginValidationFailed(std::shared_ptr<IChatUser> _User)
+{
+  std::cout << "User "<< _User->GetLoginData().UserID << " failed to log in" << std::endl;
+  LeaveUser(_User);
 }
