@@ -24,3 +24,8 @@ or to activate ssl connection
 ```
 ./build/src/client/client --host localhost --port 11111 --ssl --cert sslkeys/selfsigned.crt --userid 123
 ```
+
+To start tests:
+```
+ctest --test-dir ./build/tests
+```
