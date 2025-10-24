@@ -29,3 +29,9 @@ To start tests:
 ```
 ctest --test-dir ./build/tests
 ```
+
+There is option to analyze test coverage for clang compiler and llvm-cov installed. Generates build/coverage_html/index.html. To check test coverage:
+```
+cmake -S . -B build -DENABLE_COVERAGE=ON
+cmake --build build --target coverage
+```
