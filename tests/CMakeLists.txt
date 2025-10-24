@@ -1,4 +1,4 @@
-add_executable(my_tests ServerArgumentsParserTests.cpp)
+add_executable(my_tests ServerArgumentsParserTests.cpp CommonMessagesTests.cpp)
 target_link_libraries(my_tests gtest_main LSERVER ${Boost_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 
 include(FetchContent)
